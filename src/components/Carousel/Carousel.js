@@ -3,13 +3,10 @@ import './carousel.css';
 
 const Carousel = (props) => {
   const { children, show } = props;
-
   const [currentIndex, setCurrentIndex] = useState(0);
   const [length, setLength] = useState(children.length);
-
   const [touchPosition, setTouchPosition] = useState(null);
 
-  // Set the length to match current children from props
   useEffect(() => {
     setLength(children.length);
   }, [children]);
@@ -17,13 +14,16 @@ const Carousel = (props) => {
   const next = () => {
     if (currentIndex < length - show) {
       setCurrentIndex((prevState) => prevState + 1);
+    } else {
+      setCurrentIndex(0);
     }
-    console.log(currentIndex);
   };
 
   const prev = () => {
     if (currentIndex > 0) {
       setCurrentIndex((prevState) => prevState - 1);
+    } else {
+      setCurrentIndex(length - 1);
     }
   };
 
@@ -34,34 +34,26 @@ const Carousel = (props) => {
 
   const handleTouchMove = (e) => {
     const touchDown = touchPosition;
-
     if (touchDown === null) {
       return;
     }
-
     const currentTouch = e.touches[0].clientX;
     const diff = touchDown - currentTouch;
-
     if (diff > 5) {
       next();
     }
-
     if (diff < -5) {
       prev();
     }
-
     setTouchPosition(null);
   };
 
   return (
     <div className='carousel-container'>
       <div className='carousel-wrapper'>
-        {/* You can alwas change the content of the button to other things */}
-        {currentIndex > 0 && (
-          <button onClick={prev} className='left-arrow'>
-            &lt;
-          </button>
-        )}
+        <button onClick={prev} className='left-arrow'>
+          &lt;
+        </button>
         <div
           className='carousel-content-wrapper'
           onTouchStart={handleTouchStart}
@@ -76,12 +68,10 @@ const Carousel = (props) => {
             {children}
           </div>
         </div>
-        {/* You can alwas change the content of the button to other things */}
-        {currentIndex < length - show && (
-          <button onClick={next} className='right-arrow'>
-            &gt;
-          </button>
-        )}
+
+        <button onClick={next} className='right-arrow'>
+          &gt;
+        </button>
       </div>
     </div>
   );
